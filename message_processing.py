@@ -3,8 +3,7 @@ import logging
 from command_handlers import (
     handle_mail_command, handle_bulletin_command, handle_exit_command,
     handle_help_command, handle_stats_command, handle_fortune_command,
-    handle_bb_steps, handle_mail_steps, handle_stats_steps, handle_wall_of_shame_command,
-    handle_channel_directory_command, handle_channel_directory_steps
+    handle_bb_steps, handle_mail_steps, handle_stats_steps
 )
 
 from db_operations import add_bulletin, add_mail, delete_bulletin, delete_mail
@@ -15,10 +14,7 @@ command_handlers = {
     "b": handle_bulletin_command,
     "s": handle_stats_command,
     "f": handle_fortune_command,
-    "w": handle_wall_of_shame_command,
-    "exit": handle_exit_command,
     "h": handle_help_command,
-    "c": handle_channel_directory_command
 }
 
 def process_message(sender_id, message, interface, is_sync_message=False):
@@ -60,8 +56,6 @@ def process_message(sender_id, message, interface, is_sync_message=False):
                 handle_bb_steps(sender_id, message, step, state, interface, bbs_nodes)
             elif command == 'STATS':
                 handle_stats_steps(sender_id, message, step, interface, bbs_nodes)
-            elif command == 'CHANNEL_DIRECTORY':
-                handle_channel_directory_steps(sender_id, message, step, state, interface)
         else:
             handle_help_command(sender_id, interface)
 
