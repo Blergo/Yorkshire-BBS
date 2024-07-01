@@ -41,27 +41,8 @@ def initialize_database():
                     content TEXT NOT NULL,
                     unique_id TEXT NOT NULL
                 );''')
-    c.execute('''CREATE TABLE IF NOT EXISTS channels (
-                    id INTEGER PRIMARY KEY AUTOINCREMENT,
-                    name TEXT NOT NULL,
-                    url TEXT NOT NULL
-                );''')
     conn.commit()
     print("Database schema initialized.")
-
-def add_channel(name, url):
-    conn = get_db_connection()
-    c = conn.cursor()
-    c.execute("INSERT INTO channels (name, url) VALUES (?, ?)", (name, url))
-    conn.commit()
-
-def get_channels():
-    conn = get_db_connection()
-    c = conn.cursor()
-    c.execute("SELECT name, url FROM channels")
-    return c.fetchall()
-
-
 
 def add_bulletin(board, sender_short_name, subject, content, bbs_nodes, interface, unique_id=None):
     conn = get_db_connection()
@@ -95,7 +76,6 @@ def get_bulletin_content(bulletin_id):
     c = conn.cursor()
     c.execute("SELECT sender_short_name, date, subject, content, unique_id FROM bulletins WHERE id = ?", (bulletin_id,))
     return c.fetchone()
-
 
 def delete_bulletin(bulletin_id, bbs_nodes, interface):
     conn = get_db_connection()
