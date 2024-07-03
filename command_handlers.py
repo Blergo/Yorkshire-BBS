@@ -37,16 +37,21 @@ def handle_exit_command(sender_id, interface):
 
 def handle_help_command(sender_id, interface, state=None):
     title = "█▓▒░ Yorkshire BBS ░▒▓█\n\n"
-    commands = [
-        "[M]ail",
-        "[B]ulletin",
-        "[S]tats",
-        #"[F]ortune",
-        #"[W]all of Shame",
-        #"[C]hannel Directory",
-        #"EXIT: Exit current menu",
-        "[H]elp"
-    ]
+    commands = []
+    if "mail" not in interface.disabled:
+        commands.append("[M]ail")
+    if "bulletin" not in interface.disabled:
+        commands.append("[B]ulletin")
+    if "stats" not in interface.disabled:
+        commands.append("[S]tats")
+    if "fortune" not in interface.disabled:
+        commands.append("[F]ortune")
+    if "wos" not in interface.disabled:
+        commands.append("[W]all of Shame")
+    if "channel" not in interface.disabled:
+        commands.append("[C]hannel Directory")
+    commands.append("[H]elp")
+    
     if state and 'command' in state:
         current_command = state['command']
         if current_command == 'MAIL':
@@ -107,7 +112,7 @@ def handle_stats_steps(sender_id, message, step, interface, bbs_nodes):
             la2 = str(psutil.getloadavg()[1])
             la3 = str(psutil.getloadavg()[2])
             ramu = str(psutil.virtual_memory().percent)
-            response = "Version: 0.1.02\nCPU: " + cpu + "Mhz\nLoad: " + la1 + ", " + la2 + ", " + la3 + "\nRAM: " + ramu + "% Used"
+            response = "Version: 0.1.03_Dev\nCPU: " + cpu + "Mhz\nLoad: " + la1 + ", " + la2 + ", " + la3 + "\nRAM: " + ramu + "% Used"
             send_message(response, sender_id, interface)
             handle_stats_command(sender_id, interface)
             return
@@ -166,7 +171,7 @@ def handle_bb_steps(sender_id, message, step, state, interface, bbs_nodes):
             return
         board_name = boards.get(int(message))
         if board_name:
-            response = f"📈 {board_name} MENU 📈\n\n[0]View Bulletins\n[1]Post Bulletin\n[2]Exit"
+            response = f"📰 {board_name} MENU 📰\n\n[0]View Bulletins\n[1]Post Bulletin\n[2]Exit"
             send_message(response, sender_id, interface)
             update_user_state(sender_id, {'command': 'BULLETIN', 'step': 2, 'board': board_name})
         else:
@@ -191,7 +196,7 @@ def handle_bb_steps(sender_id, message, step, state, interface, bbs_nodes):
             else:
                 send_message(f"No bulletins in {board_name}.", sender_id, interface)
                 # Go back to the board menu
-                response = f"📈 {board_name} MENU 📈\n\n[0]View Bulletins\n[1]Post Bulletin\n[2]Exit"
+                response = f"📰 {board_name} MENU 📰\n\n[0]View Bulletins\n[1]Post Bulletin\n[2]Exit"
                 send_message(response, sender_id, interface)
                 update_user_state(sender_id, {'command': 'BULLETIN', 'step': 2, 'board': board_name})
 
@@ -204,7 +209,7 @@ def handle_bb_steps(sender_id, message, step, state, interface, bbs_nodes):
         sender_short_name, date, subject, content, unique_id = get_bulletin_content(bulletin_id)
         send_message(f"From: {sender_short_name}\nDate: {date}\nSubject: {subject}\n- - - - - - -\n{content}", sender_id, interface)
         board_name = state['board']
-        response = f"📈 {board_name} MENU 📈\n\n[0]View Bulletins\n[1]Post Bulletin\n[2]Exit"
+        response = f"📰 {board_name} MENU 📰\n\n[0]View Bulletins\n[1]Post Bulletin\n[2]Exit"
         send_message(response, sender_id, interface)
         update_user_state(sender_id, {'command': 'BULLETIN', 'step': 2, 'board': board_name})
 
@@ -238,7 +243,7 @@ def handle_bb_steps(sender_id, message, step, state, interface, bbs_nodes):
             sender_short_name = node_info['user'].get('shortName', f"Node {sender_id}")
             add_bulletin(board, sender_short_name, subject, content, bbs_nodes, interface)
             send_message(f"Your bulletin '{subject}' has been posted to {board}.\n(╯°□°)╯📄📌[{board}]", sender_id, interface)
-            response = f"📈 {board} MENU 📈\n\n[0]View Bulletins\n[1]Post Bulletin\n[2]Exit"
+            response = f"📰 {board} MENU 📰\n\n[0]View Bulletins\n[1]Post Bulletin\n[2]Exit"
             send_message(response, sender_id, interface)
             update_user_state(sender_id, {'command': 'BULLETIN', 'step': 2, 'board': board})
         else:
@@ -258,6 +263,7 @@ def handle_mail_steps(sender_id, message, step, state, interface, bbs_nodes):
                 update_user_state(sender_id, {'command': 'MAIL', 'step': 2})
             else:
                 send_message("There are no messages in your mailbox.\n(`⌒`)", sender_id, interface)
+                handle_help_command(sender_id, interface)
                 update_user_state(sender_id, None)
         elif choice == '1':
             send_message("What is the Short Name of the node you want to leave a message for?", sender_id, interface)
