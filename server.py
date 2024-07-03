@@ -4,7 +4,7 @@
 TC²-BBS Server for Meshtastic by TheCommsChannel (TC²)
 Date: 03/07/2024
 Yorkshire BBS Edition
-Version: 0.1.01
+Version: 0.1.02
 
 Description:
 The system allows for mail message handling, bulletin boards, and a channel
@@ -33,7 +33,7 @@ def display_banner():
    ██║   ╚██████╗███████╗      ██████╔╝██████╔╝███████║
    ╚═╝    ╚═════╝╚══════╝      ╚═════╝ ╚═════╝ ╚══════╝
 Yorkshire BBS Edition
-Version: 0.1.01
+Version: 0.1.02
 """
     print(banner)
 
@@ -59,7 +59,7 @@ def main():
 
     initialize_database()
 
-    def receive_packet(packet):
+    def receive_packet(packet, interface):
         on_receive(packet, interface)
 
     pub.subscribe(receive_packet, system_config['mqtt_topic'])
