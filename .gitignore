@@ -2,3 +2,5 @@ __pycache__/
 bulletins.db
 venv/
 .venv
+.idea
+config.ini
