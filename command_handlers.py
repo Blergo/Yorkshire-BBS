@@ -36,7 +36,7 @@ def handle_exit_command(sender_id, interface):
     update_user_state(sender_id, None)
 
 def handle_help_command(sender_id, interface, state=None):
-    title = "█▓▒░ Yorkshire BBS ░▒▓█\n\n"
+    title = "🏢 Yorkshire BBS 🏢\n\n"
     commands = []
     if "mail" not in interface.disabled:
         commands.append("[M]ail")
