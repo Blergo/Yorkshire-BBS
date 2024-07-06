@@ -2,9 +2,9 @@
 
 """
 TC²-BBS Server for Meshtastic by TheCommsChannel (TC²)
-Date: 03/07/2024
+Date: 06/07/2024
 Yorkshire BBS Edition
-Version: 0.1.03
+Version: 0.1.04
 
 Description:
 The system allows for mail message handling, bulletin boards, and a channel
@@ -33,7 +33,7 @@ def display_banner():
    ██║   ╚██████╗███████╗      ██████╔╝██████╔╝███████║
    ╚═╝    ╚═════╝╚══════╝      ╚═════╝ ╚═════╝ ╚══════╝
 Yorkshire BBS Edition
-Version: 0.1.03
+Version: 0.1.04
 """
     print(banner)
 
