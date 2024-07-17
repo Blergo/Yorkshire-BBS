@@ -47,7 +47,7 @@ def handle_help_command(sender_id, interface, menu_name=None):
             response = title + "\n".join(commands)
     else:
         update_user_state(sender_id, {'command': 'MAIN_MENU', 'step': 1})  # Reset to main menu state
-        response = "💾TC² BBS💾\n[Q]uick Commands\n[B]BS\n[U]tilities\nE[X]IT"
+        response = "🏢 Yorkshire BBS 🏢\n\n[Q]uick Commands\n[B]BS\n[U]tilities\nE[X]IT"
     send_message(response, sender_id, interface)
 
 
@@ -636,6 +636,6 @@ def handle_list_channels_command(sender_id, interface):
 
 
 def handle_quick_help_command(sender_id, interface):
-    response = ("✈️QUICK COMMANDS✈️\nSend command below for usage info:\nSM,, - Send "
+    response = ("✈️QUICK COMMANDS✈️\n\nSM,, - Send "
                 "Mail\nCM - Check Mail\nPB,, - Post Bulletin\nCB,, - Check Bulletins\n")
     send_message(response, sender_id, interface)
