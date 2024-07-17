@@ -120,12 +120,20 @@ def initialize_config(config_file: str = None) -> dict[str, Any]:
 
     print(f"Nodes with Urgent board permissions: {allowed_nodes}")
 
+    
+    disabled = config.get('modules', 'disabled', fallback='').split(',')
+    if disabled == ['']:
+        disabled = []
+
+    print(f"The following modules are disabled: {disabled}")
+
     return {
         'config': config,
         'interface_type': interface_type,
         'hostname': hostname,
         'port': port,
         'bbs_nodes': bbs_nodes,
+        'disabled': disabled,
         'allowed_nodes': allowed_nodes,
         'mqtt_topic': 'meshtastic.receive'
     }
