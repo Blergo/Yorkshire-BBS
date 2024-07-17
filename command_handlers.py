@@ -1,6 +1,7 @@
 import logging
 import random
 import time
+import psutil # type: ignore
 
 from meshtastic import BROADCAST_NUM
 
@@ -21,9 +22,29 @@ def handle_help_command(sender_id, interface, menu_name=None):
     if menu_name:
         update_user_state(sender_id, {'command': 'MENU', 'menu': menu_name, 'step': 1})
         if menu_name == 'bbs':
-            response = "📰BBS Menu📰\n[M]ail\n[B]ulletins\n[C]hannel Dir\n[J]S8CALL\nE[X]IT"
+            title = "🏢 Yorkshire BBS 🏢\n\n"
+            commands = []
+            if "mail" not in interface.disabled:
+                commands.append("[M]ail")
+            if "bulletin" not in interface.disabled:
+                commands.append("[B]ulletin")
+            if "channel" not in interface.disabled:
+                commands.append("[C]hannel Directory")
+            if "js8" not in interface.disabled:
+                commands.append("[J]S8Call")
+            commands.append("E[X]IT")
+            response = title + "\n".join(commands)
         elif menu_name == 'utilities':
-            response = "🛠️Utilities Menu🛠️\n[S]tats\n[F]ortune\n[W]all of Shame\nE[X]IT"
+            title = "🏢 Yorkshire BBS 🏢\n\n"
+            commands = []
+            if "stats" not in interface.disabled:
+                commands.append("[S]tats")
+            if "fortune" not in interface.disabled:
+                commands.append("[F]ortune")
+            if "wos" not in interface.disabled:
+                commands.append("[W]all of Shame")
+            commands.append("E[X]IT")
+            response = title + "\n".join(commands)
     else:
         update_user_state(sender_id, {'command': 'MAIN_MENU', 'step': 1})  # Reset to main menu state
         response = "💾TC² BBS💾\n[Q]uick Commands\n[B]BS\n[U]tilities\nE[X]IT"
@@ -38,14 +59,14 @@ def get_node_name(node_id, interface):
 
 
 def handle_mail_command(sender_id, interface):
-    response = "✉️Mail Menu✉️\nWhat would you like to do with mail?\n[R]ead  [S]end E[X]IT"
+    response = "✉️Mail Menu✉️\n\n[R]ead\n[S]end\nE[X]IT"
     send_message(response, sender_id, interface)
     update_user_state(sender_id, {'command': 'MAIL', 'step': 1})
 
 
 
 def handle_bulletin_command(sender_id, interface):
-    response = "📰Bulletin Menu📰\nWhich board would you like to enter?\n[G]eneral  [I]nfo  [N]ews  [U]rgent"
+    response = "📰Bulletin Menu📰\n\n[G]eneral\n[I]nfo\n[N]ews\n[U]rgent"
     send_message(response, sender_id, interface)
     update_user_state(sender_id, {'command': 'BULLETIN_MENU', 'step': 1})
 
@@ -56,7 +77,7 @@ def handle_exit_command(sender_id, interface):
 
 
 def handle_stats_command(sender_id, interface):
-    response = "📊Stats Menu📊\nWhat stats would you like to view?\n[N]odes  [H]ardware  [R]oles  E[X]IT"
+    response = "📊Stats Menu📊\n\n[S]erver\n[N]odes\n[H]ardware\n[R]oles\nE[X]IT"
     send_message(response, sender_id, interface)
     update_user_state(sender_id, {'command': 'STATS', 'step': 1})
 
@@ -80,6 +101,16 @@ def handle_stats_steps(sender_id, message, step, interface):
         choice = message.lower()
         if choice == 'x':
             handle_help_command(sender_id, interface)
+            return
+        elif choice == 's':
+            cpu = str(psutil.cpu_freq().current)
+            la1 = str(psutil.getloadavg()[0])
+            la2 = str(psutil.getloadavg()[1])
+            la3 = str(psutil.getloadavg()[2])
+            ramu = str(psutil.virtual_memory().percent)
+            response = "Version: 0.1.06_Dev\nCPU: " + cpu + "Mhz\nLoad: " + la1 + ", " + la2 + ", " + la3 + "\nRAM: " + ramu + "% Used"
+            send_message(response, sender_id, interface)
+            handle_stats_command(sender_id, interface)
             return
         elif choice == 'n':
             current_time = int(time.time())
@@ -128,7 +159,7 @@ def handle_bb_steps(sender_id, message, step, state, interface, bbs_nodes):
             handle_help_command(sender_id, interface, 'bbs')
             return
         board_name = boards[int(message)]
-        response = f"What would you like to do in the {board_name} board?\n[R]ead  [P]ost"
+        response = f"📰 {board_name} MENU 📰\n\n[R]ead\n[P]ost\nE[X]it"
         send_message(response, sender_id, interface)
         update_user_state(sender_id, {'command': 'BULLETIN_ACTION', 'step': 2, 'board': board_name})
 
@@ -312,7 +343,7 @@ def handle_wall_of_shame_command(sender_id, interface):
 
 
 def handle_channel_directory_command(sender_id, interface):
-    response = "📚CHANNEL DIRECTORY📚\nWhat would you like to do?\n[V]iew  [P]ost  E[X]IT"
+    response = "📚CHANNEL DIRECTORY📚\n\n[V]iew\n[P]ost\nE[X]IT"
     send_message(response, sender_id, interface)
     update_user_state(sender_id, {'command': 'CHANNEL_DIRECTORY', 'step': 1})
 
