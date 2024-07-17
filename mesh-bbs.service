@@ -7,8 +7,8 @@ Type=simple
 Restart=always
 RestartSec=20
 User=pi
-WorkingDirectory=/home/pi/TC2-BBS-mesh
-ExecStart=/home/pi/TC2-BBS-mesh/venv/bin/python3 /home/pi/TC2-BBS-mesh/server.py
+WorkingDirectory=/home/pi/Yorkshire-BBS
+ExecStart=/home/pi/Yorkshire-BBS/venv/bin/python3 /home/pi/Yorkshire-BBS/server.py
 
 [Install]
 WantedBy=multi-user.target
